@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Central - Interactive Workspace</title>
+    <style>
+        :root { --bg: #0b0f19; --card-bg: #131c2e; --border: #1e293b; --text: #f8fafc; --muted: #94a3b8; --blue: #38bdf8; --green: #4ade80; --orange: #fb923c; --purple: #c084fc; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; scroll-behavior: smooth; }
+        
+        header { background-color: #111827; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .home-nav-btn { text-decoration: none; color: white; font-weight: 800; font-size: 1.1rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .home-nav-btn:hover { color: var(--blue); }
+        
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .user-badge { background: rgba(56, 189, 248, 0.1); border: 1px solid var(--blue); padding: 8px 16px; border-radius: 20px; color: var(--blue); font-weight: 600; font-size: 0.85rem; }
+        .logout-btn { color: #f87171; text-decoration: none; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .logout-btn:hover { text-decoration: underline; }
+
+        .workspace { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .section-box { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 30px; margin-bottom: 40px; scroll-margin-top: 100px; }
+        
+        h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 1.5rem; }
+        .orange-t { color: var(--orange); } .green-t { color: var(--green); } .purple-t { color: var(--purple); }
+        
+        .form-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        input, textarea, select { width: 100%; padding: 12px; background: #1e293b; border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; }
+        button { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-orange { background: var(--orange); color: #0b0f19; } .btn-green { background: var(--green); color: #0b0f19; } .btn-purple { background: var(--purple); color: #0b0f19; }
+        button:hover { filter: brightness(1.1); }
+
+        .display-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px; }
+        .board-card { background: #1e293b; border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+        .gallery-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+        .file-label { display: block; padding: 12px; background: #1e293b; border: 2px dashed var(--border); text-align: center; border-radius: 8px; cursor: pointer; color: var(--muted); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="home-nav-btn">🏛️ STUDENT CENTRAL COMMAND</a>
+        <div class="header-actions">
+            <div class="user-badge" id="user-display">Student Session</div>
+            <span class="logout-btn" onclick="handleLogout()">Logout</span>
+        </div>
+    </header>
+
+    <div class="workspace">
+
+        <div class="section-box" id="charity-section">
+            <h2 class="orange-t">🤝 Crowdfunding & Charity Declarations</h2>
+            <p style="color:var(--muted); font-size:0.9rem; margin-bottom: 20px;">Submit financial records or institutional verifications to state resource needs for textbooks or enrollment aids.</p>
+            <form onsubmit="addFunding(event)">
+                <div class="form-layout">
+                    <input type="text" id="fund-cause" placeholder="Purpose (e.g., Book Allowance)" required>
+                    <input type="number" id="fund-amount" placeholder="Required Amount (NPR)" required>
+                    <select id="fund-verify">
+                        <option value="Awaiting School Seal Verification">Awaiting School Seal Verification</option>
+                        <option value="Verified by Student Council Committee">Verified by Student Council Committee</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-orange">Post Active Declaration</button>
+            </form>
+            <div class="display-board" id="funding-board">
+                <div class="board-card">
+                    <h3 style="color:var(--orange); margin-top:0; font-size: 1.1rem; margin-bottom: 8px;">Admission Bridge Support</h3>
+                    <p style="font-size:0.9rem; color:var(--muted); margin-bottom: 12px;">Emergency micro-grant funding pool to assist with entry enrollment fees.</p>
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:bold;">
+                        <span>Target: 15,000 NPR</span>
+                        <span style="color:var(--green);">Status: Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box" id="travel-section">
+            <h2 class="green-t">🗺️ Sathi Post-SEE Travel Network</h2>
+            <p style="color:var(--muted); font-size:0.9rem; margin-bottom: 20px;">Post itineraries, destinations, and secure contact pins to plan cross-school excursions together.</p>
+            <form onsubmit="addTravel(event)">
+                <div class="form-layout">
+                    <input type="text" id="trav-dest" placeholder="Destination (e.g., Pokhara, Ghandruk)" required>
+                    <input type="text" id="trav-date" placeholder="Target Dates (e.g., June 15-18)" required>
+                    <input type="text" id="trav-contact" placeholder="Contact Handle (Telegram / Phone)" required>
+                </div>
+                <button type="submit" class="btn-green">Publish Itinerary</button>
+            </form>
+            <div class="display-board" id="travel-board">
+                <div class="board-card">
+                    <h3 style="color:var(--green); margin-top:0; font-size: 1.1rem; margin-bottom: 8px;">Pokhara Budget Escape</h3>
+                    <p style="font-size:0.9rem; margin-bottom:5px;"><strong>Dates:</strong> June 5th Week</p>
+                    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:15px;">Looking to match with post-SEE science stream grads to co-rent a microbus and split hotel costs.</p>
+                    <span style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:5px 8px; border-radius:4px; color: var(--green);">DM: @SathiTravelGroup</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box" id="art-section">
+            <h2 class="purple-t">🎨 Fine Arts & Design Exhibition Wall</h2>
+            <p style="color:var(--muted); font-size:0.9rem; margin-bottom: 20px;">Upload image files directly from your system to display independent sketches, UI plans, or photography.</p>
+            <form onsubmit="addArt(event)">
+                <div class="form-layout" style="grid-template-columns: 1fr 1fr;">
+                    <input type="text" id="art-title" placeholder="Artwork / Interface Title" required>
+                    <div>
+                        <label for="art-file" class="file-label" id="file-label-text">📸 Click to Choose Image File</label>
+                        <input type="file" id="art-file" accept="image/*" style="display:none;" onchange="updateFileLabel()" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-purple">Exhibit to Gallery</button>
+            </form>
+            <div class="display-board" id="gallery-board">
+                <div class="board-card gallery-card">
+                    <div style="background:#2d3748; height:200px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin-bottom:12px; color:var(--muted); font-weight:bold;">[ System Architecture Wireframe ]</div>
+                    <h3 style="margin:0 0 5px 0; font-size:1.05rem;">Student Hub Portal UI v1</h3>
+                    <span style="font-size:0.8rem; color:var(--purple);">Category: UI/UX Design Design</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Secure Session Checking
+        window.onload = function() {
+            const activeUser = localStorage.getItem('active_session');
+            if(!activeUser) {
+                alert('Access Denied. Please authenticate access token first.');
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('user-display').innerText = "👤 Profile: " + activeUser;
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('active_session');
+            window.location.href = 'index.html';
+        }
+
+        function updateFileLabel() {
+            const fileInput = document.getElementById('art-file');
+            const label = document.getElementById('file-label-text');
+            if(fileInput.files.length > 0) { label.innerText = "📁 " + fileInput.files[0].name; label.style.borderColor = "var(--purple)"; }
+        }
+
+        function addFunding(e) {
+            e.preventDefault();
+            const cause = document.getElementById('fund-cause').value;
+            const amount = document.getElementById('fund-amount').value;
+            const verify = document.getElementById('fund-verify').value;
+            const card = document.createElement('div'); card.className = 'board-card';
+            card.innerHTML = `<h3 style="color:var(--orange); margin-top:0; font-size:1.1rem;">${cause}</h3>
+                              <p style="font-size:0.9rem; color:var(--muted); margin-bottom:12px;">Community student funding aid post.</p>
+                              <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:bold;">
+                                  <span>Target: ${amount} NPR</span> <span style="color:var(--blue);">${verify}</span>
+                              </div>`;
+            document.getElementById('funding-board').prepend(card); e.target.reset();
+        }
+
+        function addTravel(e) {
+            e.preventDefault();
+            const dest = document.getElementById('trav-dest').value;
+            const date = document.getElementById('trav-date').value;
+            const contact = document.getElementById('trav-contact').value;
+            const card = document.createElement('div'); card.className = 'board-card';
+            card.innerHTML = `<h3 style="color:var(--green); margin-top:0; font-size:1.1rem;">Trip to ${dest}</h3>
+                              <p style="font-size:0.9rem; margin-bottom:5px;"><strong>Dates:</strong> ${date}</p>
+                              <p style="font-size:0.9rem; color:var(--muted); margin-bottom:15px;">Coordinated group itinerary.</p>
+                              <span style="font-size:0.8rem; background:rgba(255,255,255,0.05); padding:5px 8px; border-radius:4px; color:var(--green);">Contact: ${contact}</span>`;
+            document.getElementById('travel-board').prepend(card); e.target.reset();
+        }
+
+        function addArt(e) {
+            e.preventDefault();
+            const title = document.getElementById('art-title').value;
+            const fileInput = document.getElementById('art-file');
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const card = document.createElement('div'); card.className = 'board-card gallery-card';
+                    card.innerHTML = `<img src="${event.target.result}" alt="Uploaded Gallery Art">
+                                      <h3 style="margin:0 0 5px 0; font-size:1.05rem;">${title}</h3>
+                                      <span style="font-size:0.8rem; color:var(--purple);">Category: User Portfolio Upload</span>`;
+                    document.getElementById('gallery-board').prepend(card);
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+            e.target.reset(); document.getElementById('file-label-text').innerText = "📸 Click to Choose Image File";
+        }
+    </script>
+</body>
+</html>

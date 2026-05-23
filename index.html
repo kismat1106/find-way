@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Central Command</title>
+    <style>
+        /* CSS VARIABLE SYSTEM FOR THEME TOGGLING */
+        :root {
+            /* Light Theme (Default) */
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-border: #e2e8f0;
+            --header-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+            /* Accent Framework */
+            --accent-blue: #2563eb;
+            --accent-green: #16a34a;
+            --accent-orange: #ea580c;
+            --accent-purple: #9333ea;
+            --btn-text: #ffffff;
+
+            /* Toggle Switch Elements */
+            --toggle-bg: #e2e8f0;
+            --toggle-handle: #ffffff;
+            --toggle-active: #2563eb;
+
+            --theme-transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --header-bg: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --card-border: #1f2937;
+            --header-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+
+            /* Accent Framework Modification for Accessibility */
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-orange: #fb923c;
+            --accent-purple: #c084fc;
+
+            --toggle-bg: #1f2937;
+            --toggle-handle: #94a3b8;
+            --toggle-active: #c084fc;
+        }
+
+        /* CORE CONTAINER RESETS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--theme-transition);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* STICKY ACCESSIBLE TOP BAR */
+        header {
+            width: 100%;
+            background-color: var(--header-bg);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--header-shadow);
+        }
+
+        .header-left h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        /* THE WIREFRAME SLIDER IMPLEMENTATION */
+        .theme-switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--toggle-bg);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--toggle-handle);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        input:checked + .slider {
+            background-color: var(--toggle-active);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* ZONE MANAGEMENT CONTAINERS */
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 30px;
+        }
+
+        .zone-section {
+            margin-bottom: 45px;
+        }
+
+        .zone-title {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* CARD UI SPECIFICATIONS */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.88rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* ACTION LINKS AND GROUPING */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 11px;
+            color: var(--btn-text);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .btn:hover {
+            filter: brightness(1.15);
+        }
+
+        /* COLOR ASSIGNMENTS PER SYSTEM DESIGNS */
+        .color-blue h2 { color: var(--accent-blue); }
+        .color-blue .btn { background-color: var(--accent-blue); }
+        .color-blue { border-top: 3px solid var(--accent-blue); }
+
+        .color-green h2 { color: var(--accent-green); }
+        .color-green .btn { background-color: var(--accent-green); }
+        .color-green { border-top: 3px solid var(--accent-green); }
+
+        .color-orange h2 { color: var(--accent-orange); }
+        .color-orange .btn { background-color: var(--accent-orange); }
+        .color-orange { border-top: 3px solid var(--accent-orange); }
+
+        .color-purple h2 { color: var(--accent-purple); }
+        .color-purple .btn { background-color: var(--accent-purple); }
+        .color-purple { border-top: 3px solid var(--accent-purple); }
+
+        /* RESPONSIVE RESPONSIVENESS MATRIX */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        footer {
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="header-left">
+            <h1>STUDENT CENTRAL COMMAND</h1>
+            <p>The Master Gateway Blueprint for Solutions, Advocacy, Networks, and Impact.</p>
+        </div>
+        <div class="theme-switch-container">
+            <span class="theme-label">Light</span>
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="theme-label">Dark</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="zone-section">
+            <div class="zone-title">Zone 1: Civic Channels &amp; Intelligence</div>
+            <div class="grid-container">
+                <div class="card color-blue">
+                    <div>
+                        <h2>📢 Student Voice &amp; Advocacy</h2>
+                        <p>File official grievances directly into the state architecture or coordinate local peer petitions through transparent civilian frameworks.</p>
+                    </div>
+                    <div class="btn-group">
+                        <a href="https://gunaso.opmcm.gov.np/en" target="_blank" class="btn">Hello Sarkar Gunaso</a>
+                        <a href="https://www.speakupnepal.org" target="_blank" class="btn">SpeakUp Nepal</a>
+                    </div>
+                </div>
+                <div class="card color-blue">
+                    <div>
+                        <h2>🧠 AI Academic Counselor</h2>
+                        <p>Receive instantaneous, localized analytical strategies for college streams (NEB vs. A-Levels), entry test syllabi, or computer engineering planning.</p>
+                    </div>
+                    <a href="https://gemini.google.com" target="_blank" class="btn">Launch Mentor Session</a>
+                </div>
+                <div class="card color-blue">
+                    <div>
+                        <h2>📰 Student Press &amp; Bulletins</h2>
+                        <p>Stay up to date with policy announcements, scholarship timelines, exam tracking dates, and educational features tailored for graduates.</p>
+                    </div>
+                    <a href="news-bulletins.html" class="btn">Read Central News</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="zone-section">
+            <div class="zone-title">Zone 2: Peer Ecosystems &amp; Collaboration</div>
+            <div class="grid-container">
+                <div class="card color-green">
+                    <div>
+                        <h2>🗺️ Sathi Travel Network</h2>
+                        <p>Escape isolated cycles. Propose travel routes to Pokhara, Chitwan, or trail options, match budgets with other graduates, and coordinate group travel safely.</p>
+                    </div>
+                    <a href="travel-hub.html" class="btn">Enter Travel Matchmaker</a>
+                </div>
+                <div class="card color-green">
+                    <div>
+                        <h2>🔬 Open STEM Quiz Vault</h2>
+                        <p>Direct download access to the multi-round presentation assets (General, Visual, and Gambling modules) engineered from school-wide tournament structures.</p>
+                    </div>
+                    <a href="stem-vault.html" class="btn">Download Resource Decks</a>
+                </div>
+                <div class="card color-green">
+                    <div>
+                        <h2>📱 Anti-Doomscroll Guild</h2>
+                        <p>Form healthy routines. Exchange habit challenges, track screen time limits collaboratively, and find community accountability structures.</p>
+                    </div>
+                    <a href="focus-guild.html" class="btn">Join Accountability Groups</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="zone-section">
+            <div class="zone-title">Zone 3: Social Capital &amp; Mutual Aid</div>
+            <div class="grid-container">
+                <div class="card color-orange">
+                    <div>
+                        <h2>🤝 Crowdfunding &amp; Charity Aid</h2>
+                        <p>A transparent platform providing emergency financial tracking declarations for high-need students seeking book allowances, admissions support, or health funds.</p>
+                    </div>
+                    <a href="charity-declarations.html" class="btn">View Funding Requests</a>
+                </div>
+                <div class="card color-orange">
+                    <div>
+                        <h2>🌱 Local Community Service</h2>
+                        <p>Sign up directly for regional youth mobilization events—including localized tech training bootcamps, environmental drives, and peer tutoring networks.</p>
+                    </div>
+                    <a href="community-service.html" class="btn">Browse Volunteer Actions</a>
+                </div>
+                <div class="card color-orange">
+                    <div>
+                        <h2>🎓 Academic Track Blueprints</h2>
+                        <p>Review comprehensive, data-backed guideboards detailing standard NEB streams, international Cambridge parameters, and technical CTEVT tracks.</p>
+                    </div>
+                    <a href="track-blueprints.html" class="btn">View Pathway Matrices</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="zone-section">
+            <div class="zone-title">Zone 4: Narrative, Identity &amp; Creative Expression</div>
+            <div class="grid-container">
+                <div class="card color-purple">
+                    <div>
+                        <h2>🎨 Fine Arts &amp; Design Wall</h2>
+                        <p>A curated showcase spotlighting student digital graphics, photography portfolios, sketches, and innovative interface layouts built across institutions.</p>
+                    </div>
+                    <a href="art-exhibition.html" class="btn">Launch Gallery View</a>
+                </div>
+                <div class="card color-purple">
+                    <div>
+                        <h2>📖 Literary &amp; Creative Journal</h2>
+                        <p>Publish original prose, poetry reflections, book reviews, and creative analytical compositions exploring our transitional community experiences.</p>
+                    </div>
+                    <a href="literary-journal.html" class="btn">Browse Student Articles</a>
+                </div>
+                <div class="card color-purple">
+                    <div>
+                        <h2>🛡️ The Trust &amp; Safe Exchange</h2>
+                        <p>Process systemic evaluation stress anonymously. Read personal milestone reflections or connect instantly with certified youth support hotlines.</p>
+                    </div>
+                    <a href="safe-exchange.html" class="btn">Enter Safe Space</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Engineered for the Nepalese Student Community Base © 2026
+        </footer>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                toggle.checked = true;
+            }
+        }
+
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>

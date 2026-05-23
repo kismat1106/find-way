@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Central - Secure Authentication</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --border: #1f2937;
+            --input-bg: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            padding: 35px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: -2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent);
+            color: #0b0f19;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .error { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .success { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>CENTRAL COMMAND</h1>
+            <p>Access your verified student dashboard</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" id="login-tab" onclick="switchTab('login')">Sign In</div>
+            <div class="tab" id="register-tab" onclick="switchTab('register')">Register</div>
+        </div>
+
+        <div id="auth-msg" class="message"></div>
+
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>STUDENT EMAIL</label>
+                <input type="email" id="login-email" required placeholder="you@school.edu">
+            </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" id="login-pass" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="auth-btn">Authorize Session</button>
+        </form>
+
+        <form id="register-form" onsubmit="handleRegister(event)" style="display: none;">
+            <div class="form-group">
+                <label>FULL NAME</label>
+                <input type="text" id="reg-name" required placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label>STUDENT EMAIL</label>
+                <input type="email" id="reg-email" required placeholder="name@domain.com">
+            </div>
+            <div class="form-group">
+                <label>CREATE SECURITY PASSWORD</label>
+                <input type="password" id="reg-pass" required placeholder="Minimum 6 characters">
+            </div>
+            <button type="submit" class="auth-btn">Create Free Account</button>
+        </form>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            document.getElementById('auth-msg').style.display = 'none';
+
+            if (type === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                loginTab.classList.remove('active');
+                registerTab.classList.add('active');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const msg = document.getElementById('auth-msg');
+
+            if(pass.length < 6) {
+                showMsg('Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            localStorage.setItem('user_' + email, JSON.stringify({name, email, pass}));
+            showMsg('Registration successful! Click Sign In above.', 'success');
+            document.getElementById('register-form').reset();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            const savedUser = localStorage.getItem('user_' + email);
+            if (!savedUser) {
+                showMsg('No account found with this email.', 'error');
+                return;
+            }
+
+            const user = JSON.parse(savedUser);
+            if (user.pass !== pass) {
+                showMsg('Incorrect credentials.', 'error');
+                return;
+            }
+
+            localStorage.setItem('active_session', user.name);
+            showMsg('Access granted. Redirecting...', 'success');
+            setTimeout(() => { window.location.href = 'community-hub.html'; }, 1000);
+        }
+
+        function showMsg(text, type) {
+            const msg = document.getElementById('auth-msg');
+            msg.innerText = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
