@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SXC Loyola Society — Student Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #1a3a6b;
+      --navy-dark: #122a52;
+      --navy-lt:   #e8edf7;
+      --navy-mid:  #c3d0e8;
+      --gold:      #c8971a;
+      --gold-lt:   #fdf3db;
+      --white:     #ffffff;
+      --bg:        #f4f5f8;
+      --surface:   #ffffff;
+      --border:    rgba(0,0,0,0.09);
+      --border-md: rgba(0,0,0,0.14);
+      --text:      #1c1e26;
+      --text-2:    #5a5f72;
+      --text-3:    #9498aa;
+      --radius:    10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.07);
+      --shadow:    0 2px 10px rgba(0,0,0,0.09);
+      --font:      'DM Sans', sans-serif;
+      --serif:     'DM Serif Display', serif;
+    }
+
+    html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); font-size: 15px; }
+
+    /* ─── LAYOUT ─── */
+    .app { display: flex; height: 100vh; overflow: hidden; }
+    .sidebar { width: 230px; flex-shrink: 0; background: var(--navy-dark); display: flex; flex-direction: column; padding: 0 0 16px; }
+    .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .content { flex: 1; padding: 24px 28px; display: flex; gap: 24px; }
+    .feed-area { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+    .right-col { width: 256px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ─── TOPNAV ─── */
+    .topnav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; gap: 16px; height: 56px; flex-shrink: 0; }
+    .topnav h2 { font-size: 17px; font-weight: 600; color: var(--navy); flex: none; }
+    .search-wrap { flex: 1; max-width: 340px; position: relative; }
+    .search-wrap i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 17px; pointer-events: none; }
+    .search-wrap input { width: 100%; padding: 8px 12px 8px 36px; border-radius: 20px; border: 1px solid var(--border-md); background: var(--bg); font-family: var(--font); font-size: 13px; color: var(--text); outline: none; }
+    .search-wrap input:focus { border-color: var(--navy); background: var(--white); }
+
+    /* ─── SIDEBAR ─── */
+    .logo-area { padding: 18px 20px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 8px; }
+    .logo-row { display: flex; align-items: center; gap: 10px; }
+    .logo-badge { width: 38px; height: 38px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--navy-dark); letter-spacing: -0.5px; flex-shrink: 0; }
+    .logo-name { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.25; }
+    .logo-sub { font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+    .logo-tagline { margin-top: 10px; font-size: 10px; font-style: italic; color: rgba(255,255,255,0.38); font-family: var(--serif); letter-spacing: 0.02em; }
+
+    .nav-section { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); padding: 10px 20px 4px; }
+    .nav-item { display: flex; align-items: center; gap: 11px; padding: 9px 20px; font-size: 13.5px; color: rgba(255,255,255,0.65); cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: all 0.15s; border-left: 3px solid transparent; }
+    .nav-item i { font-size: 19px; flex-shrink: 0; }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.07); }
+    .nav-item.active { color: #fff; background: rgba(255,255,255,0.1); border-left-color: var(--gold); font-weight: 500; }
+    .nav-badge { margin-left: auto; background: var(--gold); color: var(--navy-dark); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 8px; }
+
+    .sidebar-user { margin-top: auto; padding: 12px 16px; background: rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .sidebar-user:hover { background: rgba(0,0,0,0.3); }
+    .s-user-name { font-size: 13px; font-weight: 500; color: #fff; }
+    .s-user-meta { font-size: 11px; color: rgba(255,255,255,0.45); }
+
+    /* ─── PAGES ─── */
+    .page { display: none; }
+    .page.active { display: contents; }
+
+    /* ─── AVATARS ─── */
+    .av { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+    .av-40 { width: 40px; height: 40px; font-size: 14px; }
+    .av-34 { width: 34px; height: 34px; font-size: 13px; }
+    .av-28 { width: 28px; height: 28px; font-size: 11px; }
+    .av-22 { width: 22px; height: 22px; font-size: 9px; }
+    .av-blue   { background: #d0dff5; color: #1a3a6b; }
+    .av-green  { background: #cdf0dd; color: #0a6b38; }
+    .av-amber  { background: #fde9bb; color: #8a5a0a; }
+    .av-purple { background: #e4d8f6; color: #5a2a9a; }
+    .av-coral  { background: #fad4c8; color: #8a2a14; }
+    .av-teal   { background: #c8eef0; color: #0a6b70; }
+    .av-gold   { background: var(--gold-lt); color: var(--gold); }
+
+    /* ─── CARDS ─── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    .card-p { padding: 16px 18px; }
+
+    /* ─── BUTTONS ─── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border-md); background: var(--white); font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.15s; }
+    .btn:hover { background: var(--bg); }
+    .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .btn-primary:hover { background: var(--navy-dark); }
+    .btn-gold { background: var(--gold); color: var(--navy-dark); border-color: var(--gold); font-weight: 600; }
+    .btn-gold:hover { background: #b5860f; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-xs { padding: 4px 10px; font-size: 11px; border-radius: 6px; }
+
+    /* ─── CHIPS ─── */
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-md); font-size: 13px; cursor: pointer; background: var(--white); color: var(--text-2); transition: all 0.13s; }
+    .chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .chip:hover:not(.active) { background: var(--navy-lt); color: var(--navy); border-color: var(--navy-mid); }
+
+    /* ─── STORIES ─── */
+    .stories { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 2px; }
+    .stories::-webkit-scrollbar { height: 3px; }
+    .stories::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 3px; }
+    .story-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+    .story-ring { padding: 2.5px; border-radius: 50%; background: conic-gradient(var(--gold) 0%, var(--navy) 50%, var(--gold) 100%); }
+    .story-ring.add-story { background: var(--border-md); }
+    .story-inner { border: 2.5px solid var(--white); border-radius: 50%; }
+    .story-label { font-size: 11px; color: var(--text-2); max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+
+    /* ─── COMPOSE ─── */
+    .compose { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+    .compose-row { display: flex; gap: 12px; align-items: flex-start; }
+    .compose-ta { flex: 1; border: none; background: var(--bg); border-radius: var(--radius); padding: 10px 14px; font-size: 14px; font-family: var(--font); color: var(--text); resize: none; outline: none; }
+    .compose-ta::placeholder { color: var(--text-3); }
+    .compose-footer { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+    .icon-btn { background: none; border: none; color: var(--text-3); font-size: 20px; cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: all 0.12s; }
+    .icon-btn:hover { background: var(--bg); color: var(--navy); }
+
+    /* ─── POSTS ─── */
+    .post { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; }
+    .post-head { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+    .post-info { flex: 1; }
+    .post-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .post-dept { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; background: var(--navy-lt); color: var(--navy); margin-left: 5px; }
+    .post-dept.gold { background: var(--gold-lt); color: var(--gold); }
+    .post-time { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+    .post-body { font-size: 14px; line-height: 1.65; color: var(--text); margin-bottom: 12px; }
+    .post-img { width: 100%; height: 190px; background: linear-gradient(135deg, var(--navy-lt) 0%, var(--navy-mid) 100%); border-radius: var(--radius); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
+    .post-img i { font-size: 36px; color: var(--navy); opacity: 0.25; }
+    .post-actions { display: flex; gap: 2px; }
+    .paction { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: var(--radius); border: none; background: none; font-size: 13px; font-family: var(--font); color: var(--text-2); cursor: pointer; transition: all 0.12s; }
+    .paction i { font-size: 17px; }
+    .paction:hover { background: var(--bg); color: var(--navy); }
+    .paction.liked { color: #c0392b; }
+
+    /* ─── RIGHT WIDGETS ─── */
+    .widget { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+    .widget-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); font-weight: 600; margin-bottom: 12px; }
+    .ev-mini { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .ev-mini:last-child { border-bottom: none; padding-bottom: 0; }
+    .ev-box { width: 38px; height: 40px; background: var(--navy-lt); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ev-day { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1; }
+    .ev-mon { font-size: 9px; text-transform: uppercase; color: var(--navy); opacity: 0.7; }
+    .ev-name { font-size: 13px; font-weight: 500; line-height: 1.3; }
+    .ev-loc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    .sug-item { display: flex; align-items: center; gap: 9px; padding: 6px 0; }
+    .sug-info { flex: 1; }
+    .sug-name { font-size: 13px; font-weight: 500; }
+    .sug-dept { font-size: 11px; color: var(--text-3); }
+    .follow-btn { font-size: 11px; padding: 4px 11px; border-radius: 6px; border: 1px solid var(--navy); color: var(--navy); background: none; cursor: pointer; font-weight: 500; transition: all 0.12s; }
+    .follow-btn:hover, .follow-btn.following { background: var(--navy-lt); }
+    .follow-btn.following { border-color: var(--border-md); color: var(--text-3); }
+
+    /* ─── MARKETPLACE ─── */
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(188px, 1fr)); gap: 16px; }
+    .mcard { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: all 0.15s; }
+    .mcard:hover { box-shadow: var(--shadow); border-color: var(--navy-mid); transform: translateY(-1px); }
+    .mcard-img { height: 138px; background: linear-gradient(135deg, var(--navy-lt), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
+    .mcard-img i { font-size: 40px; color: var(--navy); opacity: 0.3; }
+    .mcard-body { padding: 12px 14px; }
+    .mcard-title { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .mcard-desc { font-size: 12px; color: var(--text-2); line-height: 1.45; margin-bottom: 9px; }
+    .mcard-foot { display: flex; align-items: center; justify-content: space-between; }
+    .mcard-price { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .mcard-seller { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
+    .mcard-condition { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; margin-bottom: 6px; }
+    .cond-good { background: #d4f0dd; color: #0a6b2a; }
+    .cond-new { background: var(--gold-lt); color: var(--gold); }
+    .cond-used { background: #f0e4d4; color: #8a5a20; }
+
+    /* ─── EVENTS ─── */
+    .ev-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; display: flex; gap: 18px; align-items: flex-start; transition: box-shadow 0.15s; }
+    .ev-card:hover { box-shadow: var(--shadow); }
+    .ev-datebox { width: 58px; height: 62px; background: var(--navy); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+    .ev-day2 { font-size: 24px; font-weight: 700; line-height: 1; }
+    .ev-mon2 { font-size: 11px; text-transform: uppercase; opacity: 0.75; letter-spacing: 0.05em; }
+    .ev-content { flex: 1; }
+    .ev-title2 { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+    .ev-meta2 { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text-2); margin-bottom: 10px; }
+    .ev-meta2 span i { font-size: 14px; vertical-align: -2px; margin-right: 3px; }
+    .ev-tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .ev-tag { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; }
+    .tag-academic { background: var(--navy-lt); color: var(--navy); }
+    .tag-cultural  { background: #f6eaff; color: #6b2aaa; }
+    .tag-sports    { background: #dff6e8; color: #0a6b2a; }
+    .tag-club      { background: var(--gold-lt); color: var(--gold); }
+    .tag-official  { background: #ffe8e8; color: #aa2a2a; }
+
+    /* ─── CLUBS ─── */
+    .clubs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+    .club-card2 { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: box-shadow 0.15s; }
+    .club-card2:hover { box-shadow: var(--shadow); }
+    .club-icon2 { width: 44px; height: 44px; background: var(--navy-lt); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--navy); }
+    .club-head { display: flex; align-items: flex-start; justify-content: space-between; }
+    .club-name2 { font-size: 14.5px; font-weight: 600; }
+    .club-members2 { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+    .club-desc2 { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+    .joined-badge { font-size: 10px; padding: 3px 8px; background: #dff6e8; color: #0a6b2a; border-radius: 5px; font-weight: 600; }
+
+    /* ─── NOTIFICATIONS ─── */
+    .notif-list { display: flex; flex-direction: column; }
+    .notif-item { display: flex; gap: 11px; padding: 13px 18px; border-bottom: 1px solid var(--border); align-items: flex-start; transition: background 0.12s; }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: var(--bg); }
+    .notif-item.unread { background: #f5f7fc; }
+    .ndot { width: 8px; height: 8px; border-radius: 50%; background: var(--navy); margin-top: 6px; flex-shrink: 0; }
+    .ndot.read { background: var(--border-md); }
+    .ntext { font-size: 13.5px; line-height: 1.55; flex: 1; }
+    .ntext strong { color: var(--navy); }
+    .ntime { font-size: 11.5px; color: var(--text-3); white-space: nowrap; }
+
+    /* ─── PROFILE ─── */
+    .profile-cover { height: 110px; background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #2a5090 100%); border-radius: var(--radius-lg) var(--radius-lg) 0 0; position: relative; }
+    .profile-cover-txt { position: absolute; bottom: 14px; left: 18px; color: rgba(255,255,255,0.5); font-size: 11px; font-style: italic; font-family: var(--serif); }
+    .profile-body { background: var(--white); border: 1px solid var(--border); border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 0 20px 20px; }
+    .profile-av-row { display: flex; align-items: flex-end; gap: 16px; transform: translateY(-24px); margin-bottom: -8px; }
+    .profile-av { width: 76px; height: 76px; border-radius: 50%; font-size: 26px; font-weight: 700; background: var(--navy-lt); color: var(--navy); display: flex; align-items: center; justify-content: center; border: 4px solid var(--white); flex-shrink: 0; }
+    .profile-stats { display: flex; gap: 24px; margin-bottom: 12px; }
+    .pstat { text-align: center; }
+    .pstat-n { font-size: 18px; font-weight: 700; color: var(--navy); }
+    .pstat-l { font-size: 11px; color: var(--text-3); }
+    .profile-bio { font-size: 14px; line-height: 1.6; color: var(--text-2); border-top: 1px solid var(--border); padding-top: 14px; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 4px; }
+
+    /* ─── BANNER ─── */
+    .info-banner { background: linear-gradient(90deg, var(--navy) 0%, #2a5090 100%); color: #fff; border-radius: var(--radius-lg); padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+    .info-banner i { font-size: 22px; opacity: 0.8; flex-shrink: 0; }
+    .info-banner-text { flex: 1; font-size: 13.5px; line-height: 1.5; }
+    .info-banner-text strong { font-size: 14px; display: block; margin-bottom: 2px; }
+
+    /* ─── MOTTO ─── */
+    .motto-bar { background: var(--gold-lt); border: 1px solid #f0d88a; border-radius: var(--radius); padding: 8px 14px; font-size: 12px; color: #8a5a0a; font-style: italic; font-family: var(--serif); text-align: center; }
+
+    @media (max-width: 1100px) { .right-col { display: none; } }
+    @media (max-width: 760px) {
+      .sidebar { width: 60px; }
+      .logo-area .logo-name, .logo-area .logo-sub, .logo-area .logo-tagline, .nav-item span { display: none; }
+      .nav-item { justify-content: center; padding: 12px; border-left: none; border-bottom: 3px solid transparent; }
+      .nav-item.active { border-bottom-color: var(--gold); border-left: none; }
+      .s-user-name, .s-user-meta { display: none; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-row">
+        <div class="logo-badge">SXC</div>
+        <div>
+          <div class="logo-name">Loyola Society</div>
+          <div class="logo-sub">Thapathali Campus</div>
+        </div>
+      </div>
+      <div class="logo-tagline">"Dedicated to Excellence, Leadership, Service"</div>
+    </div>
+
+    <div class="nav-section">Community</div>
+    <button class="nav-item active" onclick="showPage('feed', this)"><i class="ti ti-home"></i><span>Home Feed</span></button>
+    <button class="nav-item" onclick="showPage('market', this)"><i class="ti ti-building-store"></i><span>Marketplace</span></button>
+    <button class="nav-item" onclick="showPage('events', this)"><i class="ti ti-calendar-event"></i><span>Events</span><span class="nav-badge">3</span></button>
+    <button class="nav-item" onclick="showPage('clubs', this)"><i class="ti ti-users-group"></i><span>Clubs</span></button>
+
+    <div class="nav-section">Personal</div>
+    <button class="nav-item" onclick="showPage('notifs', this)"><i class="ti ti-bell"></i><span>Notifications</span><span class="nav-badge">5</span></button>
+    <button class="nav-item" onclick="showPage('profile', this)"><i class="ti ti-user"></i><span>My Profile</span></button>
+    <button class="nav-item"><i class="ti ti-settings"></i><span>Settings</span></button>
+
+    <div class="sidebar-user" onclick="showPage('profile', document.querySelector('.nav-item:nth-of-type(6)'))">
+      <div class="av av-34 av-blue" style="flex-shrink:0;font-size:13px;">RK</div>
+      <div>
+        <div class="s-user-name">Rohan KC</div>
+        <div class="s-user-meta">BBA · Sem IV</div>
+      </div>
+      <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,0.3);margin-left:auto;font-size:16px;"></i>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- Top Nav -->
+    <nav class="topnav">
+      <h2 id="page-title">Home Feed</h2>
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Search students, posts, items…" />
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-sm" id="topbar-btn" onclick="handleTopBtn()"><i class="ti ti-plus"></i> <span id="topbar-btn-label">New Post</span></button>
+        <button class="btn btn-sm" style="position:relative;" onclick="showPage('notifs', null)">
+          <i class="ti ti-bell" style="font-size:18px;"></i>
+          <span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--gold);border-radius:50%;font-size:9px;font-weight:700;color:var(--navy-dark);display:flex;align-items:center;justify-content:center;">5</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ════ FEED PAGE ════ -->
+    <div id="page-feed" class="page active">
+      <div class="content">
+        <div class="feed-area">
+
+          <div class="motto-bar">"Men and Women for Others" · Nepal Jesuit Society · Est. 1988</div>
+
+          <!-- Stories -->
+          <div class="stories">
+            <div class="story-item">
+              <div class="story-ring add-story"><div class="story-inner"><div class="av av-40 av-blue">RK</div></div></div>
+              <div class="story-label">Add story</div>
+            </div>
+            <div class="story-item">
+              <div class="story-ring"><div class="story-inner"><div class="av av-40 av-amber">PS</div></div></div>
+              <div class="story-label">Priya S.</div>
+            </div>
+            <div class="story-item">
+              <div class="story-ring"><div class="story-inner"><div class="av av-40 av-green">AM</div></div></div>
+              <div class="story-label">Aarav M.</div>
+            </div>
+            <div class="story-item">
+              <div class="story-ring"><div class="story-inner"><div class="av av-40 av-purple">SL</div></div></div>
+              <div class="story-label">Sita L.</div>
+            </div>
+            <div class="story-item">
+              <div class="story-ring"><div class="story-inner"><div class="av av-40 av-coral">BT</div></div></div>
+              <div class="story-label">Bibek T.</div>
+            </div>
+            <div class="story-item">
+              <div class="story-ring"><div class="story-inner"><div class="av av-40 av-teal">NJ</div></div></div>
+              <div class="story-label">Nisha J.</div>
+            </div>
+          </div>
+
+          <!-- Compose -->
+          <div class="compose">
+            <div class="compose-row">
+              <div class="av av-40 av-blue">RK</div>
+              <textarea class="compose-ta" rows="2" placeholder="What's on your mind, Rohan? Share with your Loyola Society…"></textarea>
+            </div>
+            <div class="compose-footer">
+              <button class="icon-btn" title="Photo"><i class="ti ti-photo"></i></button>
+              <button class="icon-btn" title="Video"><i class="ti ti-video"></i></button>
+              <button class="icon-btn" title="Poll"><i class="ti ti-chart-bar"></i></button>
+              <button class="icon-btn" title="Emoji"><i class="ti ti-mood-smile"></i></button>
+              <div style="margin-left:auto;display:flex;gap:8px;">
+                <select style="font-size:12px;border:1px solid var(--border-md);border-radius:6px;padding:5px 8px;font-family:var(--font);color:var(--text-2);background:var(--bg);">
+                  <option>Everyone</option>
+                  <option>My Program</option>
+                  <option>My Semester</option>
+                </select>
+                <button class="btn btn-primary btn-sm">Post</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post: Official Notice -->
+          <div class="post">
+            <div class="post-head">
+              <div class="av av-40 av-gold" style="font-size:13px;font-weight:700;">SXC</div>
+              <div class="post-info">
+                <div class="post-name">SXC Loyola Campus <span class="post-dept gold">Official</span></div>
+                <div class="post-time">📍 Thapathali, Kathmandu · 2 hours ago</div>
+              </div>
+              <button class="icon-btn"><i class="ti ti-dots"></i></button>
+            </div>
+            <div class="post-body">
+              📢 <strong>Important Notice:</strong> The Cambridge A Level examinations schedule for June 2025 has been released. All A Level Science and Non-Science students are requested to collect their Statement of Entry from the admin office by <strong>June 3</strong>. For queries, contact the examination department at the Thapathali campus. Best of luck to all Xavierians! 🎓
+            </div>
+            <div class="post-actions">
+              <button class="paction" onclick="toggleLike(this)"><i class="ti ti-heart"></i> 134</button>
+              <button class="paction"><i class="ti ti-message-circle"></i> 42</button>
+              <button class="paction"><i class="ti ti-bookmark"></i> Save</button>
+              <button class="paction"><i class="ti ti-share"></i> Share</button>
+            </div>
+          </div>
+
+          <!-- Post: Student -->
+          <div class="post">
+            <div class="post-head">
+              <div class="av av-40 av-amber">PS</div>
+              <div class="post-info">
+                <div class="post-name">Priya Shrestha <span class="post-dept">A Level · Sci</span></div>
+                <div class="post-time">5 hours ago</div>
+              </div>
+              <button class="icon-btn"><i class="ti ti-dots"></i></button>
+            </div>
+            <div class="post-body">
+              The <strong>Agora Debate Club</strong> session today was fire 🔥 We debated "Should AI be regulated in Nepal?" — both sides had incredible arguments. If you're not in Agora yet, you're genuinely missing out. Next session is Thursday at 3 PM in Block B. Come debate, it's the most alive I've felt all semester 💬
+            </div>
+            <div class="post-img"><i class="ti ti-photo"></i></div>
+            <div class="post-actions">
+              <button class="paction liked" onclick="toggleLike(this)"><i class="ti ti-heart-filled"></i> 87</button>
+              <button class="paction"><i class="ti ti-message-circle"></i> 19</button>
+              <button class="paction"><i class="ti ti-bookmark"></i> Save</button>
+              <button class="paction"><i class="ti ti-share"></i> Share</button>
+            </div>
+          </div>
+
+          <!-- Post: Student 2 -->
+          <div class="post">
+            <div class="post-head">
+              <div class="av av-40 av-green">AM</div>
+              <div class="post-info">
+                <div class="post-name">Aarav Maharjan <span class="post-dept">BSc CSIT · S3</span></div>
+                <div class="post-time">Yesterday</div>
+              </div>
+              <button class="icon-btn"><i class="ti ti-dots"></i></button>
+            </div>
+            <div class="post-body">
+              Does anyone have the Data Structures lecture notes from last Tuesday? I missed class. Also — heads up, I'm selling my <em>Discrete Mathematics</em> (Rosen, 7th Ed.) book in the marketplace, barely used. Perfect condition! Link in profile 📚
+            </div>
+            <div class="post-actions">
+              <button class="paction" onclick="toggleLike(this)"><i class="ti ti-heart"></i> 24</button>
+              <button class="paction"><i class="ti ti-message-circle"></i> 8</button>
+              <button class="paction"><i class="ti ti-bookmark"></i> Save</button>
+              <button class="paction"><i class="ti ti-share"></i> Share</button>
+            </div>
+          </div>
+
+          <!-- Post: Lost & Found -->
+          <div class="post">
+            <div class="post-head">
+              <div class="av av-40 av-teal">NJ</div>
+              <div class="post-info">
+                <div class="post-name">Nisha Joshi <span class="post-dept">BBA · S2</span></div>
+                <div class="post-time">2 days ago</div>
+              </div>
+              <button class="icon-btn"><i class="ti ti-dots"></i></button>
+            </div>
+            <div class="post-body">
+              🔍 <strong>Lost &amp; Found:</strong> Found a black Casio calculator near the computer lab (Block A, 2nd floor). If it's yours, DM me with your name on it to verify. Please share so it reaches the owner!
+            </div>
+            <div class="post-actions">
+              <button class="paction" onclick="toggleLike(this)"><i class="ti ti-heart"></i> 11</button>
+              <button class="paction"><i class="ti ti-message-circle"></i> 3</button>
+              <button class="paction"><i class="ti ti-share"></i> 18 Shares</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-col">
+          <div class="widget">
+            <div class="widget-title">Upcoming at Loyola</div>
+            <div class="ev-mini">
+              <div class="ev-box"><div class="ev-day">10</div><div class="ev-mon">Jun</div></div>
+              <div><div class="ev-name">A Level Exams Begin</div><div class="ev-loc"><i class="ti ti-map-pin" style="font-size:11px;"></i> Exam Halls, Thapathali</div></div>
+            </div>
+            <div class="ev-mini">
+              <div class="ev-box"><div class="ev-day">15</div><div class="ev-mon">Jun</div></div>
+              <div><div class="ev-name">A Level Meet 2081</div><div class="ev-loc"><i class="ti ti-map-pin" style="font-size:11px;"></i> Main Grounds</div></div>
+            </div>
+            <div class="ev-mini">
+              <div class="ev-box"><div class="ev-day">22</div><div class="ev-mon">Jun</div></div>
+              <div><div class="ev-name">Section Cup Finals</div><div class="ev-loc"><i class="ti ti-map-pin" style="font-size:11px;"></i> Sports Ground</div></div>
+            </div>
+            <div class="ev-mini">
+              <div class="ev-box"><div class="ev-day">28</div><div class="ev-mon">Jun</div></div>
+              <div><div class="ev-name">Freshers' Welcome</div><div class="ev-loc"><i class="ti ti-map-pin" style="font-size:11px;"></i> Auditorium</div></div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="widget-title">Suggested Xavierians</div>
+            <div class="sug-item">
+              <div class="av av-28 av-coral">BT</div>
+              <div class="sug-info"><div class="sug-name">Bibek Tamang</div><div class="sug-dept">BSc CSIT · S5</div></div>
+              <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+            </div>
+            <div class="sug-item">
+              <div class="av av-28 av-purple">SM</div>
+              <div class="sug-info"><div class="sug-name">Suman Magar</div><div class="sug-dept">A Level · Non-Sci</div></div>
+              <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+            </div>
+            <div class="sug-item">
+              <div class="av av-28 av-green">RD</div>
+              <div class="sug-info"><div class="sug-name">Riya Dangol</div><div class="sug-dept">BSc Microbiology</div></div>
+              <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+            </div>
+            <div class="sug-item">
+              <div class="av av-28 av-teal">KG</div>
+              <div class="sug-info"><div class="sug-name">Kushal Gurung</div><div class="sug-dept">BBS · S3</div></div>
+              <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+            </div>
+          </div>
+
+          <div class="widget" style="background:var(--navy);border-color:var(--navy);">
+            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:7px;"><i class="ti ti-school" style="font-size:17px;color:var(--gold);"></i> About Loyola Campus</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6;">Cambridge A Level (Science &amp; Non-Science) · Thapathali, Kathmandu · Nepal Jesuit Society · Est. 1988</div>
+            <div style="margin-top:10px;font-size:11.5px;color:rgba(255,255,255,0.5);">📞 +977 1-5344636<br>✉️ ktm@sxc.edu.np<br>🌐 sxc.edu.np</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ MARKETPLACE ════ -->
+    <div id="page-market" class="page">
+      <div class="content" style="flex-direction:column;">
+        <div class="info-banner">
+          <i class="ti ti-shield-check"></i>
+          <div class="info-banner-text">
+            <strong>SXC Loyola Society Marketplace</strong>
+            Buy, sell, and trade safely within our verified student community. Only SXC students can list or purchase items.
+          </div>
+          <button class="btn btn-gold btn-sm"><i class="ti ti-plus"></i> List Item</button>
+        </div>
+        <div class="chips">
+          <div class="chip active" onclick="filterChip(this)">All Items</div>
+          <div class="chip" onclick="filterChip(this)">📚 Textbooks</div>
+          <div class="chip" onclick="filterChip(this)">💻 Electronics</div>
+          <div class="chip" onclick="filterChip(this)">📝 Notes & PDFs</div>
+          <div class="chip" onclick="filterChip(this)">🎒 Stationery</div>
+          <div class="chip" onclick="filterChip(this)">👕 Clothes</div>
+          <div class="chip" onclick="filterChip(this)">🛠 Services</div>
+          <div class="chip" onclick="filterChip(this)">🔍 Lost & Found</div>
+        </div>
+        <div class="market-grid">
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-book"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-good">Good Condition</span>
+              <div class="mcard-title">Calculus — Stewart 8th Ed.</div>
+              <div class="mcard-desc">Minor highlights only. Perfect for BSc CSIT Sem II students doing MAT 201.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 650</div>
+                <div class="mcard-seller"><div class="av av-22 av-green">AM</div> Aarav</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-device-laptop"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-good">Good Condition</span>
+              <div class="mcard-title">Adjustable Laptop Stand</div>
+              <div class="mcard-desc">Aluminium alloy, foldable 6-level height adjustment. Used for 1 semester.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 1,200</div>
+                <div class="mcard-seller"><div class="av av-22 av-amber">PS</div> Priya</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-file-text"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-new">New / Digital</span>
+              <div class="mcard-title">A Level Physics Notes — Full</div>
+              <div class="mcard-desc">Complete Cambridge AS & A2 Physics handwritten notes. All topics covered.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 200</div>
+                <div class="mcard-seller"><div class="av av-22 av-teal">NJ</div> Nisha</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-headphones"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-good">Good Condition</span>
+              <div class="mcard-title">JBL T110 Earphones</div>
+              <div class="mcard-desc">Works perfectly fine. Upgrading to wireless so selling this off.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 800</div>
+                <div class="mcard-seller"><div class="av av-22 av-coral">BT</div> Bibek</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-book-2"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-good">Good Condition</span>
+              <div class="mcard-title">Discrete Math — Rosen 7th Ed.</div>
+              <div class="mcard-desc">Barely used, no writing inside. Great for BSc CSIT Sem III.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 900</div>
+                <div class="mcard-seller"><div class="av av-22 av-green">AM</div> Aarav</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-backpack"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-used">Lightly Used</span>
+              <div class="mcard-title">College Backpack 30L</div>
+              <div class="mcard-desc">Dark navy, padded laptop compartment, side pockets. Used 1 year.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 1,500</div>
+                <div class="mcard-seller"><div class="av av-22 av-purple">SM</div> Suman</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-brush"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-new">Service</span>
+              <div class="mcard-title">Graphic Design — Logos & Posters</div>
+              <div class="mcard-desc">A Level Art student. Club posters, event banners, social media graphics. 2-day delivery.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 500+</div>
+                <div class="mcard-seller"><div class="av av-22 av-teal">NJ</div> Nisha</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-calculator"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-used">Lightly Used</span>
+              <div class="mcard-title">Casio FX-991EX Calculator</div>
+              <div class="mcard-desc">Works perfectly. Ideal for A Level and CSIT Math exams.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 1,800</div>
+                <div class="mcard-seller"><div class="av av-22 av-coral">BT</div> Bibek</div>
+              </div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-img"><i class="ti ti-file-code"></i></div>
+            <div class="mcard-body">
+              <span class="mcard-condition cond-new">Service</span>
+              <div class="mcard-title">Python Tutoring (1-on-1)</div>
+              <div class="mcard-desc">BSc CSIT Sem V student. Basics to OOP. Online or library. 1 hr/session.</div>
+              <div class="mcard-foot">
+                <div class="mcard-price">Rs 400/hr</div>
+                <div class="mcard-seller"><div class="av av-22 av-green">AM</div> Aarav</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ EVENTS ════ -->
+    <div id="page-events" class="page">
+      <div class="content" style="flex-direction:column;">
+        <div class="chips">
+          <div class="chip active" onclick="filterChip(this)">All Events</div>
+          <div class="chip" onclick="filterChip(this)">Academic</div>
+          <div class="chip" onclick="filterChip(this)">Cultural</div>
+          <div class="chip" onclick="filterChip(this)">Sports</div>
+          <div class="chip" onclick="filterChip(this)">Club</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:13px;">
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">10</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">Cambridge A Level Examinations 2025</div>
+              <div class="ev-tags"><span class="ev-tag tag-academic">Academic</span><span class="ev-tag tag-official">Official</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>9:00 AM onwards</span>
+                <span><i class="ti ti-map-pin"></i>Examination Halls, Thapathali</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">Cambridge International AS & A Level examinations for Science and Non-Science students. Collect Statement of Entry from admin by June 3. Good luck, Xavierians! 🎓</div>
+              <button class="btn btn-sm"><i class="ti ti-bookmark"></i> Save</button>
+            </div>
+          </div>
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">15</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">A Level Meet 2081 — Annual Sports Day</div>
+              <div class="ev-tags"><span class="ev-tag tag-sports">Sports</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>8:00 AM – 5:00 PM</span>
+                <span><i class="ti ti-map-pin"></i>Loyola Campus Grounds</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">The flagship annual sports meet of Loyola Campus, Thapathali. Track events, field games, and inter-section competitions. Register your team through your section rep.</div>
+              <div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm">Register</button><button class="btn btn-sm"><i class="ti ti-share"></i> Share</button></div>
+            </div>
+          </div>
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">18</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">Section Cup — Inter-Section Football</div>
+              <div class="ev-tags"><span class="ev-tag tag-sports">Sports</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>7:00 AM</span>
+                <span><i class="ti ti-map-pin"></i>College Football Ground</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">The beloved Section Cup football tournament returns. Register your section's team of 11 with the Sports Council by June 14.</div>
+              <button class="btn btn-primary btn-sm">Register Team</button>
+            </div>
+          </div>
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">20</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">SET Club — Science Exhibition 2081</div>
+              <div class="ev-tags"><span class="ev-tag tag-club">Club</span><span class="ev-tag tag-academic">Academic</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>10:00 AM – 4:00 PM</span>
+                <span><i class="ti ti-map-pin"></i>Block C, Science Labs</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">SXC's Science &amp; Engineering and Technology (SET) Club presents student research projects, experiments, and tech demonstrations. Open to all Xavierians.</div>
+              <div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm">Attend</button><button class="btn btn-sm"><i class="ti ti-bookmark"></i> Save</button></div>
+            </div>
+          </div>
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">22</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">Art & Culture Club Showcase</div>
+              <div class="ev-tags"><span class="ev-tag tag-cultural">Cultural</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>2:00 PM – 6:00 PM</span>
+                <span><i class="ti ti-map-pin"></i>Main Auditorium</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">Annual showcase of Loyola's creative talent — paintings, poetry recitals, dance performances, and music. Free entry for all SXC students.</div>
+              <div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm">Attend</button><button class="btn btn-sm"><i class="ti ti-share"></i> Share</button></div>
+            </div>
+          </div>
+
+          <div class="ev-card">
+            <div class="ev-datebox"><div class="ev-day2">28</div><div class="ev-mon2">Jun</div></div>
+            <div class="ev-content">
+              <div class="ev-title2">Freshers' Welcome Ceremony 2081</div>
+              <div class="ev-tags"><span class="ev-tag tag-cultural">Cultural</span></div>
+              <div class="ev-meta2">
+                <span><i class="ti ti-clock"></i>11:00 AM</span>
+                <span><i class="ti ti-map-pin"></i>Loyola Campus, Thapathali</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-2);margin-bottom:10px;line-height:1.5;">Welcome the newest batch of Xavierians to Loyola Campus! Performances, introductions, and the traditional SXC welcome ceremony.</div>
+              <button class="btn btn-sm"><i class="ti ti-bookmark"></i> Save</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ CLUBS ════ -->
+    <div id="page-clubs" class="page">
+      <div class="content" style="flex-direction:column;">
+        <div class="info-banner">
+          <i class="ti ti-users-group"></i>
+          <div class="info-banner-text">
+            <strong>SXC Loyola Campus Clubs & Councils</strong>
+            Active clubs and councils forming the heart of Xavierian student life — dedicated to excellence, leadership, and service.
+          </div>
+        </div>
+        <div class="clubs-grid">
+
+          <div class="club-card2">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+              <div class="club-icon2"><i class="ti ti-flask"></i></div>
+              <span class="joined-badge">Joined ✓</span>
+            </div>
+            <div>
+              <div class="club-name2">SET Club</div>
+              <div class="club-members2">Science &amp; Engineering Technology · 168 members</div>
+            </div>
+            <div class="club-desc2">Promotes science and technology culture through exhibitions, workshops, quizzes, and guest talks. One of SXC's most active academic clubs.</div>
+            <button class="btn btn-sm" style="width:fit-content;">View Club</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-microphone-2"></i></div>
+            <div>
+              <div class="club-name2">Agora Debate Club</div>
+              <div class="club-members2">Debate & Public Speaking · 94 members</div>
+            </div>
+            <div class="club-desc2">Fosters confident public speaking and critical thinking. Hosts internal debates, Model UN, and inter-college competitions across Kathmandu.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Club</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-palette"></i></div>
+            <div>
+              <div class="club-name2">Art & Culture Club</div>
+              <div class="club-members2">Arts, Music & Performance · 143 members</div>
+            </div>
+            <div class="club-desc2">Annual cultural showcases, musical performances, painting sessions, and the iconic Loyola Cultural Night — celebrating Nepal and beyond.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Club</button>
+          </div>
+
+          <div class="club-card2">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+              <div class="club-icon2"><i class="ti ti-book-open"></i></div>
+              <span class="joined-badge">Joined ✓</span>
+            </div>
+            <div>
+              <div class="club-name2">Literary Club</div>
+              <div class="club-members2">Writing & Literature · 77 members</div>
+            </div>
+            <div class="club-desc2">Creative writing workshops, poetry readings, book discussions, and the college literary journal. For Xavierians who love language.</div>
+            <button class="btn btn-sm" style="width:fit-content;">View Club</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-calculator"></i></div>
+            <div>
+              <div class="club-name2">Math Club</div>
+              <div class="club-members2">Mathematics & Problem Solving · 88 members</div>
+            </div>
+            <div class="club-desc2">Weekly problem-solving sessions, math olympiad prep, and workshops. For students who think equations are beautiful.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Club</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-heart-handshake"></i></div>
+            <div>
+              <div class="club-name2">Social Service Council</div>
+              <div class="club-members2">Community Service · 210 members</div>
+            </div>
+            <div class="club-desc2">In the Jesuit tradition of "Men and Women for Others" — campus drives, community outreach, teaching volunteering, and environmental campaigns.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Council</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-ball-football"></i></div>
+            <div>
+              <div class="club-name2">Sports Council</div>
+              <div class="club-members2">Multi-sport · 195 members</div>
+            </div>
+            <div class="club-desc2">Organizes the A Level Meet, Section Cup, inter-college tournaments, and manages all sporting activities at Loyola Campus.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Council</button>
+          </div>
+
+          <div class="club-card2">
+            <div class="club-icon2"><i class="ti ti-camera"></i></div>
+            <div>
+              <div class="club-name2">Photography & Media Club</div>
+              <div class="club-members2">Photography & Journalism · 112 members</div>
+            </div>
+            <div class="club-desc2">Documents Loyola life, hosts photo walks around Kathmandu, editing workshops, and manages the annual SXC Photo Exhibition.</div>
+            <button class="btn btn-primary btn-sm" style="width:fit-content;" onclick="this.textContent='Joined ✓';this.classList.remove('btn-primary');">Join Club</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ NOTIFICATIONS ════ -->
+    <div id="page-notifs" class="page">
+      <div class="content" style="flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+          <div style="font-size:14px;color:var(--text-2);">5 unread notifications</div>
+          <button class="btn btn-sm" style="margin-left:auto;" onclick="markAllRead()">Mark all read</button>
+        </div>
+        <div class="card">
+          <div class="notif-list">
+            <div class="notif-item unread">
+              <div class="ndot"></div>
+              <div class="ntext"><strong>Aarav Maharjan</strong> liked your post: "Anyone have last Tuesday's notes?"</div>
+              <div class="ntime">2m ago</div>
+            </div>
+            <div class="notif-item unread">
+              <div class="ndot"></div>
+              <div class="ntext"><strong>Priya Shrestha</strong> commented on your post: "Check the WhatsApp group, I shared them there! 📱"</div>
+              <div class="ntime">18m ago</div>
+            </div>
+            <div class="notif-item unread">
+              <div class="ndot"></div>
+              <div class="ntext"><strong>Bibek Tamang</strong> sent you a message about your Calculus book listing in the marketplace.</div>
+              <div class="ntime">1h ago</div>
+            </div>
+            <div class="notif-item unread">
+              <div class="ndot"></div>
+              <div class="ntext"><strong>A Level Meet 2081</strong> registration is now open. Limited slots — register before June 10!</div>
+              <div class="ntime">3h ago</div>
+            </div>
+            <div class="notif-item unread">
+              <div class="ndot"></div>
+              <div class="ntext"><strong>SET Club</strong> posted a new event: Science Exhibition 2081 on June 20 at Block C.</div>
+              <div class="ntime">5h ago</div>
+            </div>
+            <div class="notif-item">
+              <div class="ndot read"></div>
+              <div class="ntext"><strong>SXC Admin</strong> posted an official notice about Cambridge A Level examination dates.</div>
+              <div class="ntime">Yesterday</div>
+            </div>
+            <div class="notif-item">
+              <div class="ndot read"></div>
+              <div class="ntext"><strong>Suman Magar</strong> started following you.</div>
+              <div class="ntime">2 days ago</div>
+            </div>
+            <div class="notif-item">
+              <div class="ndot read"></div>
+              <div class="ntext"><strong>Nisha Joshi</strong> listed a new item: "A Level Physics Notes — Full Set" for Rs 200 in Marketplace.</div>
+              <div class="ntime">2 days ago</div>
+            </div>
+            <div class="notif-item">
+              <div class="ndot read"></div>
+              <div class="ntext"><strong>Agora Debate Club</strong> has a session this Thursday. Topic: "AI Regulation in Nepal".</div>
+              <div class="ntime">3 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PROFILE ════ -->
+    <div id="page-profile" class="page">
+      <div class="content" style="flex-direction:column;max-width:700px;">
+        <div>
+          <div class="profile-cover">
+            <div class="profile-cover-txt">"Dedicated to Excellence, Leadership, Service" · SXC Loyola Campus</div>
+          </div>
+          <div class="profile-body">
+            <div class="profile-av-row">
+              <div class="profile-av">RK</div>
+              <div style="padding-bottom:4px;">
+                <div style="font-size:20px;font-weight:700;">Rohan KC</div>
+                <div style="font-size:13.5px;color:var(--text-2);margin-top:2px;">Bachelor of Business Studies (BBS) · Semester IV · SXC Thapathali</div>
+              </div>
+              <button class="btn btn-sm" style="margin-left:auto;align-self:flex-end;"><i class="ti ti-edit"></i> Edit Profile</button>
+            </div>
+            <div class="profile-stats">
+              <div class="pstat"><div class="pstat-n">48</div><div class="pstat-l">Posts</div></div>
+              <div class="pstat"><div class="pstat-n">213</div><div class="pstat-l">Followers</div></div>
+              <div class="pstat"><div class="pstat-n">178</div><div class="pstat-l">Following</div></div>
+              <div class="pstat"><div class="pstat-n">4</div><div class="pstat-l">Clubs</div></div>
+            </div>
+            <div class="profile-bio">
+              BBS student with a passion for marketing and entrepreneurship. Member of the Literary Club and Social Service Council. From Lalitpur. Loves trekking and photography on weekends 🏔️📸 · <em>Xavierian since 2022</em>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-p">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);font-weight:600;margin-bottom:12px;">Academic Details</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13.5px;">
+            <div><span style="color:var(--text-3);">Program</span><br><strong>Bachelor of Business Studies (BBS)</strong></div>
+            <div><span style="color:var(--text-3);">Campus</span><br><strong>SXC Loyola, Thapathali</strong></div>
+            <div><span style="color:var(--text-3);">Affiliation</span><br><strong>Tribhuvan University</strong></div>
+            <div><span style="color:var(--text-3);">Semester</span><br><strong>IV (2nd Year)</strong></div>
+          </div>
+        </div>
+
+        <div class="card card-p">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);font-weight:600;margin-bottom:12px;">My Marketplace Listings</div>
+          <div style="display:flex;align-items:center;gap:12px;color:var(--text-2);font-size:14px;">
+            <i class="ti ti-building-store" style="font-size:22px;color:var(--text-3);"></i>
+            No active listings yet.
+            <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showPage('market', null)"><i class="ti ti-plus"></i> List Item</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const pageTitles = {
+    feed: 'Home Feed',
+    market: 'Marketplace',
+    events: 'Events',
+    clubs: 'Clubs & Councils',
+    notifs: 'Notifications',
+    profile: 'My Profile'
+  };
+  const topBtns = {
+    feed: ['New Post', 'ti-plus'],
+    market: ['List Item', 'ti-plus'],
+    events: ['Create Event', 'ti-plus'],
+    clubs: ['Find Clubs', 'ti-search'],
+    notifs: ['Settings', 'ti-settings'],
+    profile: ['Edit Profile', 'ti-edit']
+  };
+  let currentPage = 'feed';
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page-' + id);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const titleEl = document.getElementById('page-title');
+    if (titleEl) titleEl.textContent = pageTitles[id] || id;
+    const [label, icon] = topBtns[id] || ['Action', 'ti-plus'];
+    document.getElementById('topbar-btn-label').textContent = label;
+    document.querySelector('#topbar-btn i').className = 'ti ' + icon;
+    currentPage = id;
+  }
+
+  function handleTopBtn() {
+    if (currentPage === 'market') showPage('market', null);
+  }
+
+  function toggleLike(btn) {
+    const wasLiked = btn.classList.toggle('liked');
+    const icon = btn.querySelector('i');
+    const nums = btn.textContent.match(/\d+/);
+    const count = nums ? parseInt(nums[0]) : 0;
+    icon.className = wasLiked ? 'ti ti-heart-filled' : 'ti ti-heart';
+    btn.innerHTML = '';
+    btn.appendChild(icon);
+    btn.append(' ' + (wasLiked ? count + 1 : count - 1));
+    if (wasLiked) btn.classList.add('liked');
+  }
+
+  function toggleFollow(btn) {
+    if (btn.textContent === 'Follow') {
+      btn.textContent = 'Following';
+      btn.classList.add('following');
+    } else {
+      btn.textContent = 'Follow';
+      btn.classList.remove('following');
+    }
+  }
+
+  function filterChip(el) {
+    el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(n => n.classList.remove('unread'));
+    document.querySelectorAll('.ndot').forEach(d => d.classList.add('read'));
+    document.querySelector('[onclick="showPage(\'notifs\', null)"] span') &&
+      (document.querySelector('[onclick="showPage(\'notifs\', null)"] span').style.display = 'none');
+  }
+</script>
+
+</body>
+</html>
